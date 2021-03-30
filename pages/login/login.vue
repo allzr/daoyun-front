@@ -1,8 +1,8 @@
 <template>
 	<view class="login">
-		<view>
-			<u-subsection :list="list" :current="curNar" style="padding: 0rpx;" buttonColor="#58C3E0"
-				@change="sectionChange" :animation="true"></u-subsection>
+		<view class="header">
+			<u-subsection class = "section" :list="list" :current="curNar" style ="padding: 0rpx;" buttonColor="#58C3E0"
+				@change="sectionChange" :animation="true"></u-subsection>	
 		</view>
 
 		<view class="body">
@@ -78,12 +78,11 @@
 						}
 					],
 					vcode: [{
-							required: true,
-							message: '请输入6位验证码',
-							len:6,
-							trigger: ['blur'],
-						}
-					]
+						required: true,
+						message: '请输入6位验证码',
+						len: 6,
+						trigger: ['blur'],
+					}]
 				}
 			}
 		},
@@ -124,12 +123,25 @@
 </script>
 
 <style lang="scss">
+	page {
+		background-color: #FFFFFF;
+	}
+
 	.login {
-		width: 80%;
+		width: 100%;
 		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -80%);
+		top: 20%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		.header{
+			width: 80%;
+			margin-bottom: 50rpx;
+		}
+		.body{
+			width: 80%;
+		}
 	}
 
 	label {
