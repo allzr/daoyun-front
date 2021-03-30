@@ -1,8 +1,8 @@
 <template>
 	<view class="login">
 		<view class="header">
-			<u-subsection class = "section" :list="list" :current="curNar" style ="padding: 0rpx;" buttonColor="#58C3E0"
-				@change="sectionChange" :animation="true"></u-subsection>	
+			<u-subsection class="section" :list="list" :current="curNar" style="padding: 0rpx;" buttonColor="#58C3E0"
+				@change="sectionChange" :animation="true"></u-subsection>
 		</view>
 
 		<view class="body">
@@ -37,6 +37,7 @@
 				<text class="regist" @click="register">注册新账号</text>
 				<text class="findpwd" @click="findpwd">找回密码</text>
 			</view>
+			<u-toast ref="uToast"/>
 		</view>
 	</view>
 </template>
@@ -106,19 +107,26 @@
 				})
 			},
 			register() {
-				uni.navigateTo({
-					url: "../register/register",
-				});
+				this.showToast('登录成功');
 			},
 			findpwd() {
-				console.log("zhaomima")
+				uni.navigateTo({
+					url: "./findpwd/findpwd"
+				})
+			},
+			showToast(message) {
+				this.$refs.uToast.show({
+					title: message,
+					type: 'success',
+					position: 'bottom'
+				})
 			}
-
 		},
 		// 必须要在onReady生命周期，因为onLoad生命周期组件可能尚未创建完毕
 		onReady() {
 			this.$refs.uForm.setRules(this.rules);
-		}
+		},
+		
 	}
 </script>
 
@@ -135,11 +143,13 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		.header{
+
+		.header {
 			width: 80%;
 			margin-bottom: 50rpx;
 		}
-		.body{
+
+		.body {
 			width: 80%;
 		}
 	}

@@ -2,16 +2,13 @@
 	<view>
 		<view class="header">
 			<view class="touxiang">
-				<u-avatar :src="src" mode="square" size="120"></u-avatar>
+				<u-avatar :src="src" mode="square" size="150"></u-avatar>
 			</view>
 			<view class="message">
 				<view class="name">
 					{{name}}
 				</view>
-				
 				<view class="id">
-					<!-- <text>到云账号 : {{id}}</text> -->
-					<!-- <u-icon name="arrow-right" style="margin-left: 20rpx;" @click="changeMessgage" ></u-icon> -->
 					<view class="cloud">
 						到云账号 : {{id}}
 					</view>
@@ -57,7 +54,7 @@
 		justify-content: space-between;
 		align-items: center;
 		.touxiang{
-			transform: translate(100%,10%);
+			transform: translate(50%,0);
 		}
 		.message{
 			transform: translate(0,10%);

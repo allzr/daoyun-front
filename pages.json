@@ -14,7 +14,8 @@
             {
                 "navigationBarTitleText": "到云",
                 "enablePullDownRefresh": false,
-				"navigationStyle":"custom"
+				"navigationStyle":"custom",
+				"enablePullDownRefresh":true
             }
          
         },
@@ -36,6 +37,24 @@
             }
             
         }
+        ,{
+            "path" : "pages/login/register/register",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/login/findpwd/findpwd",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "找回密码",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"easycom": {
 		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
@@ -43,8 +62,7 @@
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "到云",
-		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
+		"navigationBarBackgroundColor": "#F8F8F8"
 	},
 	"tabBar":{
 		"backgroundColor":"#FFFFFF",
