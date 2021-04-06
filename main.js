@@ -11,7 +11,7 @@ const app = new Vue({
     ...App
 })
 
-
+//登录拦截。。方法。。检查本地token即可，没有的话进入登录页面
 Vue.prototype.checkLogin = function(){
 	const token = uni.getStorageSync('token')
 	if(token === ''){ // 本地没有token表示未登录
