@@ -33,13 +33,13 @@
 			}
 		},
 		onPullDownRefresh() {
-			setTimeout(function(){
+			setTimeout(function() {
 				uni.stopPullDownRefresh();
 				uni.showToast({
-					title:"刷新成功",
-					duration:500
+					title: "刷新成功",
+					duration: 500
 				})
-			},1000)
+			}, 1000)
 		},
 		methods: {
 			navselect({
@@ -56,6 +56,6 @@
 		background-color: #FFFFFF;
 		display: flex;
 		flex-direction: column;
-		padding-top: 10rpx;	
+		padding-top: 10rpx;
 	}
 </style>

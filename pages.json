@@ -55,6 +55,16 @@
             }
             
         }
+        ,{
+            "path" : "pages/home/myMessage/myMessage",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "用户信息",
+                "enablePullDownRefresh": false,
+				"navigationBarBackgroundColor":"#FFFFFF"
+            }
+            
+        }
     ],
 	"easycom": {
 		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
@@ -62,7 +72,7 @@
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "到云",
-		"navigationBarBackgroundColor": "#F8F8F8"
+		"navigationBarBackgroundColor": "#FFFFFF"
 	},
 	"tabBar":{
 		"backgroundColor":"#FFFFFF",
