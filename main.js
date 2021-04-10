@@ -2,6 +2,9 @@ import Vue from 'vue'
 import App from './App'
 // main.js
 import uView from "uview-ui";
+
+import http from './common/http.js'    // 路径需根据项目实际情况
+Vue.prototype.$http = http         // 挂载在 Vue 原型链上（通过 this.$ajax 调用）
 Vue.use(uView);
 Vue.config.productionTip = false
 
