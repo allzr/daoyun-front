@@ -59,48 +59,49 @@
 			}
 		},
 		data() {
-			return {
-				src: '/static/logo.png',
-				
-				user: {
-					phone:"17396510930",
-					name: "陈发荣",
-					nickName: "摇井",
-					brithDay: "1998",
-					sex: "男",
-				},
-				shownan: true,
-				showstudent: true,
-				show: false,
-				years: []
-			}
-		},
-		methods: {
-			confirm(e) {
-				console.log(String(e[0].label))
-				this.user.brithDay = String(e[0].label)
+				return {
+					src: '/static/logo.png',
+					
+					user: {
+						phone:"17396510930",
+						name: "陈发荣",
+						nickName: "摇井",
+						brithDay: "1998",
+						sex: "男",
+					},
+					shownan: true,
+					showstudent: true,
+					show: false,
+					years: []
+				}
+			},
+			methods: {
+				confirm(e) {
+					console.log(String(e[0].label))
+					this.user.brithDay = String(e[0].label)
+				}
 			}
 		}
-	}
-</script>
+	</script>
 
-<style lang="scss">
-	.header {
-		background-color: #FFFFFF;
-		display: flex;
-		justify-content: space-between;
-		padding: 20rpx 0rpx 20rpx 20rpx;
-
-		.touxiang {
+	<style lang="scss">
+		.header {
+			background-color: #FFFFFF;
 			display: flex;
-			align-items: center;
+			justify-content: space-between;
+			padding: 20rpx 0rpx 20rpx 20rpx;
 
-			.name {
-				margin-left: 30rpx;
+			.touxiang {
 				display: flex;
-				flex-direction: column;
-				align-items: stretch;
+				align-items: center;
+
+				.name {
+					margin-left: 30rpx;
+					display: flex;
+					flex-direction: column;
+					align-items: stretch;
+				}
 			}
 		}
-	}
-</style>
+	</style>
+	

@@ -1,19 +1,44 @@
 <template>
 	<view>
 		<view class="header">
-			<navbar @navselect="navselect"></navbar>
+			<navbar @navselect="navselect" @banke="banke"></navbar>
 		</view>
+
 		<view class="body">
 			<view>
-				<u-search placeholder="日照香炉生紫烟" v-model="keyword"></u-search>
+				<u-search placeholder="请输入课程名称" v-model="keyword"></u-search>
 			</view>
-			<view v-if="index == 0">
+			<view v-if="index == 0" >
 				<classCard2 :className="className" :teacherName="teacherName" :createTime="createTime"></classCard2>
 			</view>
-			<view v-if="index == 1">
+			<view v-if="index == 1" >
 				<classCard :className="className" :teacherName="teacherName" :createTime="createTime"></classCard>
 			</view>
 		</view>
+		
+		
+		<u-modal v-model="showPop" title="加入班课" show-cancel-button @cancel="cancelPop" @confirm="confirmPop">
+			<view class="slot-content">
+				<view>
+					<input type='text' placeholder="请输入班课号" v-model="classid" />
+				</view>
+			</view>
+		</u-modal>
+		
+		<u-modal v-model="showPop1" title="创建班课" show-cancel-button @cancel="cancelPop1" @confirm="confirmPop1">
+			<view class="slot-content">
+				<br>
+				<view>
+					<input  type='text' placeholder="请输入班课名称" v-model="form.className">
+				</view>
+				<br>
+				<view>
+					<input  type='text' placeholder="请输入开始时间" v-model="form.createTime">
+				</view>
+				<br>
+			</view>
+		</u-modal>
+		
 	</view>
 </template>
 <script>
@@ -27,9 +52,17 @@
 		data() {
 			return {
 				index: 0,
+				keyword: '',
 				className: "工程训练",
 				teacherName: "老池",
-				createTime: "2021-01"
+				createTime: "2021-01",
+				showPop: false,
+				showPop1: false,
+				classid: '',
+				form: {
+					className: '',
+					createTime: '',
+				}
 			}
 		},
 		onPullDownRefresh() {
@@ -46,7 +79,30 @@
 				index
 			}) {
 				this.index = index
-			}
+			},
+			banke({
+				index
+			}) {
+				if (index == 1) {
+					this.showPop = true
+				} else {
+					this.showPop1 = true
+				}
+			},
+			cancelPop() { //取消
+				this.showPop1 = false;
+			},
+			confirmPop() { //确定
+				console.log(this.classid)
+
+			},
+			cancelPop1() { //取消
+				this.showPop1 = false;
+			},
+			confirmPop1() { //确定
+				console.log(this.classid)
+			},
+			
 		}
 	}
 </script>
@@ -57,5 +113,11 @@
 		display: flex;
 		flex-direction: column;
 		padding-top: 10rpx;
+	}
+
+	.slot-content {
+		padding-left: 30rpx;
+		font-size: 24rpx;
+		color: $u-content-color;	
 	}
 </style>

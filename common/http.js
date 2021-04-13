@@ -1,4 +1,5 @@
 let baseUrl = 'http://www.baidu.com';
+
 const httpRequest = (opts) => {
 	let httpDefaultOpts = {
 		url: baseUrl + opts.url,

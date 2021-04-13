@@ -1,25 +1,21 @@
 <template>
-	<view class="classsCard2">
+	<view class="classsCard2" @click="classDetail">
 		<view class="picture">
 			<u-avatar :src="src" mode="square" size="140"></u-avatar>
 		</view>
 		<view class="message">
-			<view style="font-size: 40rpx; font-weight: bolder;">
+			<view style="font-size: 40rpx; font-weight: bolder;" >
 				{{className}}
 			</view>
-			<view class="classDetail">
+			<view class="classDetail" >
 				<view style="float: left;">{{teacherName}}</view>
 				<view style="float: righ; color: #606060;">{{createTime}}</view>
-			</view>
-			<view class="operate">
-				<view>
-					<u-icon name="checkmark-circle"></u-icon> 发起签到
-				</view>
 			</view>
 		</view>
 		<view>
 			<u-cell-item arrow-direction="right"></u-cell-item>
 		</view>
+		
 	</view>
 </template>
 
@@ -32,8 +28,22 @@
 		},
 		data() {
 			return {
-				src: '/static/logo.png'
+				src: '/static/logo.png',
+				
 			};
+		},
+		methods:{
+			sign(){
+				this.show = true;
+			},
+			click(index){
+				console.log(index);
+			},
+			classDetail(){
+				uni.navigateTo({
+					url:"../../pages/home/class/classForTeacher/classForTeacher"
+				})
+			}
 		}
 	}
 </script>
