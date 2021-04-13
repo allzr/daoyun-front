@@ -40,8 +40,10 @@
 				})
 			},
 			click(index) {
-				console.log(`点击了第${index + 1}项，内容为：${this.list[index].text}`)
-			}
+				this.$emit("banke",{
+					index:index
+				})
+			},
 		}
 	}
 </script>

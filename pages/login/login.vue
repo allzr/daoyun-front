@@ -15,7 +15,7 @@
 					<u-form-item prop="vcode">
 						<label>验证码</label>
 						<u-input placeholder="请输入验证码" v-model="form.vcode"></u-input>
-						<u-button @click="getVcode" size="mini" style="color: #58C3E0;">获取验证码</u-button>
+						<u-button @click="getVcode" size="mini" type="primary">获取验证码</u-button>
 					</u-form-item>
 					<u-button @click="login" style="color: #58C3E0;">登录</u-button>
 				</u-form>
@@ -107,7 +107,9 @@
 				})
 			},
 			register() {
-				this.showToast('登录成功');
+				uni.navigateTo({
+					url:"./register/register"
+				});
 			},
 			findpwd() {
 				uni.navigateTo({
