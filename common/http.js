@@ -1,4 +1,4 @@
-let baseUrl = 'http://www.baidu.com';
+let baseUrl = 'http://192.168.0.104:8081';
 
 const httpRequest = (opts) => {
 	let httpDefaultOpts = {
@@ -11,7 +11,7 @@ const httpRequest = (opts) => {
 			"Content-Type": "application/json; charset=UTF-8"
 		} : {
 			'X-Requested-With': 'XMLHttpRequest',
-			'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+			'content-type': 'application/x-www-form-urlencoded;application/json;charset=UTF-8',
 		},
 		dataType: 'json',
 	}
@@ -50,7 +50,7 @@ const httpTokenRequest = (opts) => {
 		} : {
 			'Token': token,
 			'X-Requested-With': 'XMLHttpRequest',
-			'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+			"Access-Control-Allow-Methods": "POST, GET, PUT, OPTIONS, DELETE",
 		},
 		dataType: 'json',
 	}

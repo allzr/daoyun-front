@@ -42,7 +42,7 @@
 			<u-cell-group>
 				<u-cell-item class="line" icon="order" title="用户协议" :arrow="true" arrow-direction="right"></u-cell-item>
 				<u-cell-item class="line" icon="lock" title="隐私政策" :arrow="true" arrow-direction="right"></u-cell-item>
-				<u-cell-item class="line" style="border-bottom: #E4E7ED solid 0.1rpx;" icon="setting" title="设置" :arrow="true" arrow-direction="right"></u-cell-item>
+				<u-cell-item class="line" style="border-bottom: #E4E7ED solid 0.1rpx;" icon="setting" title="设置" :arrow="true" arrow-direction="right" @click='gotoSetting'></u-cell-item>
 			</u-cell-group>
 		</view>
 	</view>
@@ -61,6 +61,11 @@
 			gotoUserMessage(){
 				uni.navigateTo({
 					url:"./myMessage/myMessage"
+				})
+			},
+			gotoSetting(){
+				uni.navigateTo({
+					url:'setting/setting'
 				})
 			}
 		}

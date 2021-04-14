@@ -16,6 +16,7 @@
 <style lang="scss">
 	/* uni.scss */
 	@import 'uview-ui/theme.scss';
+
 	page{
 		background-color: #F0F0F0;
 	}
