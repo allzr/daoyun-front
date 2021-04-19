@@ -6,11 +6,11 @@
 			</view>
 			<view class="message">
 				<view class="name">
-					{{name}}
+					{{user.username}}
 				</view>
 				<view class="id">
 					<view class="cloud">
-						到云账号 : {{id}}
+						到云账号 : {{user.phoneNumber}}
 					</view>
 					<view>
 						<u-cell-item arrow-direction="right"></u-cell-item>
@@ -21,7 +21,7 @@
 
 		<view class="lineBar">
 			<view class="son1">
-				<view style="color: #58C3E0;">90</view>
+				<view style="color: #58C3E0;">{{user.exp}}</view>
 				<view>经验值</view>
 			</view>
 			<view class="son">
@@ -50,11 +50,23 @@
 
 <script>
 	export default {
+		onReady() {
+			this.user = uni.getStorageSync('user')
+		},
 		data() {
 			return {
 				src: '/static/logo.png',
 				name: "小发",
-				id: "825655513"
+				id: "825655513",
+				realName: "点击设置真实姓名",
+				user:{
+					exp: 0, //经验值
+					phoneNumber: "",
+					realName: "",
+					schoolName: null,
+					userType: 0,
+					username: "",
+				}
 			}
 		},
 		methods:{

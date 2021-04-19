@@ -44,10 +44,7 @@
 <script>
 	export default {
 		onLoad() {
-			var loginRes = this.checkLogin();
-			if (!loginRes) {
-				return false;
-			}
+			this.checkLogin();
 		},
 		data() {
 			return {

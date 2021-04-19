@@ -15,7 +15,8 @@
 			<u-form-item :label-position="labelPosition" label="身份类别" prop="userType" label-width="150">
 				<u-radio-group @change="radioGroupChange" :width="radioCheckWidth" :wrap="radioCheckWrap">
 					<u-radio shape="circle" v-for="(item, index) in radioList" :key="index" :name="item.name">
-						{{ item.name }}</u-radio>
+						{{ item.name }}
+					</u-radio>
 				</u-radio-group>
 			</u-form-item>
 			<u-form-item :rightIconStyle="{color: '#888', fontSize: '32rpx'}" right-icon="kefu-ermai"
@@ -33,8 +34,11 @@
 				勾选代表同意到云的版权协议
 			</view>
 		</view>
+		
+		<u-toast ref="uToast" />
+		
 		<u-button @click="submit" type="primary">提交</u-button>
-		<u-verification-code seconds="60" ref="uCode"  @change="codeChange"></u-verification-code>
+		<u-verification-code seconds="60" ref="uCode" @change="codeChange"></u-verification-code>
 	</view>
 </template>
 
@@ -49,13 +53,9 @@
 					rePassword: "",
 					phoneNumber: "",
 					userType: 1,
-					code:'',
-					agreement:false
+					code: '',
 				},
-				verfy:{
-					code:'',
-					canUse:false
-				},
+				agreement: false,
 				rules: {
 					username: [{
 							required: true,
@@ -63,10 +63,10 @@
 							trigger: 'blur',
 						},
 						{
-							min: 3,
+							min: 1,
 							max: 5,
-							message: '姓名长度在3到5个字符',
-							trigger: [ 'blur'],
+							message: '姓名长度在1到5个字符',
+							trigger: ['blur'],
 						},
 					],
 					phoneNumber: [{
@@ -87,7 +87,7 @@
 					password: [{
 							required: true,
 							message: '请输入密码',
-							trigger: [ 'blur'],
+							trigger: ['blur'],
 						},
 						{
 							// 正则不能含有两边的引号
@@ -99,21 +99,21 @@
 					rePassword: [{
 							required: true,
 							message: '请重新输入密码',
-							trigger: [ 'blur'],
+							trigger: ['blur'],
 						},
 						{
 							validator: (rule, value, callback) => {
 								return value === this.model.password;
 							},
 							message: '两次输入的密码不相等',
-							trigger: [ 'blur'],
+							trigger: ['blur'],
 						}
 					],
-					code:[{
+					code: [{
 						required: true,
 						message: '请输入6位验证码',
-						size:6,
-						trigger: [ 'blur'],
+						size: 6,
+						trigger: ['blur'],
 					}]
 				},
 				border: false,
@@ -148,39 +148,43 @@
 			submit() {
 				this.$refs.uForm.validate(valid => {
 					if (valid) {
-						if (!this.model.agreement) return this.$u.toast('请勾选协议');
-						if (!this.verfy.canUse ) return this.$u.toast('验证码过期');
-						if (this.verfy.code != this.model.code) return this.$u.toast('验证码错误');
-						
+						if (!this.agreement) return this.$u.toast('请勾选协议');
 						this.$http.httpRequest({
-							url:'/user/register',
-							method:'POST',
-							data:this.model
-						}).then((res)=>{
-							console.log(res.data);
-						}).catch((err)=>{
-							
+							url: '/user/register',
+							method: 'POST',
+							data: this.model
+						}).then((res) => {
+							if (res.data.code == 200) {
+								uni.setStorage({
+									key:'phone',
+									data:this.model.phoneNumber
+								})
+								this.$u.toast('注册成功，正在跳转登录...');
+								setTimeout(()=>{
+									uni.navigateTo({
+										url: '../login'
+									});
+								},1000)
+							} else {
+								this.$u.toast(res.data.message);
+							}
 						})
 					} else {
 						console.log('验证失败');
 					}
-				});
-			},
-			// checkbox选择发生变化
-			checkboxGroupChange(e) {
-				this.model.likeFruit = e;
+				}); 
 			},
 			// 勾选版权协议
 			checkboxChange(e) {
-				this.model.agreement = e.value;
+				this.agreement = e.value;
 			},
 			codeChange(text) {
 				this.codeTips = text;
 			},
-			radioGroupChange(e){
-				if (e == '老师'){
+			radioGroupChange(e) {
+				if (e == '老师') {
 					this.model.userType = 2
-				}else{
+				} else {
 					this.model.userType = 1
 				}
 			},
@@ -194,25 +198,17 @@
 						mask: true
 					})
 					this.$http.httpRequest({
-						url:'/user/code',
-						method:'POST',
-						data:this.model.phoneNumber
-					}).then((res)=>{
-						console.log(res)
-						this.verfy.code = res.data.obj;
-						console.log(this.verfy.code);
-						this.verfy.canUse = true
-					})
-					setTimeout(()=>{
-						this.verfy.canUse = false
-					},60000)
-					setTimeout(() => {
+						url: '/user/code',
+						method: 'POST',
+						data: this.model.phoneNumber
+					}).then((res) => {
 						uni.hideLoading();
-						// 这里此提示会被this.start()方法中的提示覆盖
-						this.$u.toast('验证码已发送');
-						// 通知验证码组件内部开始倒计时
+						this.$u.toast(res.data.message);
 						this.$refs.uCode.start();
-					}, 1500);
+					}).catch((err) => {
+						uni.hideLoading();
+						this.$u.toast('网络错误');
+					})
 				} else {
 					this.$u.toast('倒计时结束后再发送');
 				}

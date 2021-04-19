@@ -8,25 +8,25 @@
 		<view class="body">
 			<view class="login-message" v-show="curNar == 0">
 				<u-form :model="form" ref="uForm">
-					<u-form-item prop="phone">
-						<label>手机号</label>
-						<u-input placeholder="请输入手机号" v-model="form.phone"></u-input>
+					<u-form-item :rightIconStyle="{color: '#888', fontSize: '32rpx'}" right-icon="kefu-ermai"
+						label="手机号" prop="phoneNumber" label-width="150">
+						<u-input placeholder="请输入手机号" v-model="form.phoneNumber" type="number"></u-input>
 					</u-form-item>
-					<u-form-item prop="vcode">
-						<label>验证码</label>
-						<u-input placeholder="请输入验证码" v-model="form.vcode"></u-input>
-						<u-button @click="getVcode" size="mini" type="primary">获取验证码</u-button>
+					<u-form-item label="验证码" prop="password" label-width="150">
+						<u-input placeholder="请输入验证码" v-model="form.password" type="text"></u-input>
+						<u-button slot="right" type="success" size="mini" @click="getCode">{{codeTips}}</u-button>
 					</u-form-item>
-					<u-button @click="login" style="color: #58C3E0;">登录</u-button>
+					<u-button @click="loginByCode" style="color: #58C3E0;">登录</u-button>
 				</u-form>
 			</view>
 			<view class="login-password" v-show="curNar == 1">
-				<u-form :model="form2" ref="uForm1">
-					<u-form-item prop="account" label="账号">
-						<u-input placeholder="账号 邮箱 手机号" v-model="form2.account"></u-input>
+				<u-form :model="form1" ref="uForm1">
+					<u-form-item prop="phoneNumber" label="账号" label-width="150"
+						:rightIconStyle="{color: '#888', fontSize: '32rpx'}" right-icon="kefu-ermai">
+						<u-input placeholder="账号 邮箱 手机号" v-model="form1.phoneNumber"></u-input>
 					</u-form-item>
-					<u-form-item prop="password" label="密码" >
-						<u-input placeholder="请输入密码" type="password" v-model="form2.passward"></u-input>
+					<u-form-item prop="password" label="密码" label-width="150">
+						<u-input placeholder="请输入密码" type="password" v-model="form1.password"></u-input>
 					</u-form-item>
 					<u-button @click="loginByPassword" style="color: #58C3E0;">登录</u-button>
 				</u-form>
@@ -35,9 +35,13 @@
 				<text class="regist" @click="register">注册新账号</text>
 				<text class="findpwd" @click="findpwd">找回密码</text>
 			</view>
-
+			<view>
+				
+			</view>
 			<u-toast ref="uToast" />
 		</view>
+		
+		<u-verification-code seconds="60" ref="uCode" @change="codeChange"></u-verification-code>
 	</view>
 </template>
 
@@ -45,6 +49,7 @@
 	export default {
 		data() {
 			return {
+				remberme: false,
 				title: 'Hello',
 				list: [{
 					name: "短信登陆"
@@ -52,14 +57,16 @@
 					name: "密码登录"
 				}],
 				curNar: 0,
+
 				// 第一个表单数据验证
 				form: {
-					phone: '',
-					vcode: '',
+					phoneNumber: '',
+					password: '',
 				},
+				codeTips: '获取验证码',
 				// 第一个表单验证规则
 				rules: {
-					phone: [{
+					phoneNumber: [{
 							required: true,
 							message: '请输入手机号',
 							trigger: ['blur'],
@@ -76,25 +83,25 @@
 							trigger: ['blur'],
 						}
 					],
-					vcode: [{
+					password: [{
 						required: true,
 						message: '请输入6位验证码',
 						len: 6,
 						trigger: ['blur'],
 					}]
 				},
-				form2: {
-					account: '',
-					passward: ''
+				form1: {
+					phoneNumber: '',
+					password: ''
 				},
 				// 第二个表单验证规则
 				rules1: {
-					account: [{
+					phoneNumber: [{
 						required: true,
 						message: '请输账号',
 						trigger: ['blur'],
 					}],
-					password:[{
+					password: [{
 						required: true,
 						message: '密码不能为空',
 						trigger: ['blur'],
@@ -103,33 +110,79 @@
 			}
 		},
 		methods: {
-			login() {
-
+			// 获取验证码
+			getCode() {
+				if (this.form.phoneNumber == '') return this.$u.toast('手机号码为空');
+				if (this.$refs.uCode.canGetCode) {
+					// 模拟向后端请求验证码
+					uni.showLoading({
+						title: '正在获取验证码',
+						mask: true
+					})
+					this.$http.httpRequest({
+						url: '/user/code',
+						method: 'POST',
+						data: this.form.phoneNumber
+					}).then((res) => {
+						uni.hideLoading();
+						this.$u.toast(res.data.message);
+						this.$refs.uCode.start();
+					}).catch((err) => {
+						uni.hideLoading();
+						this.$u.toast('网络错误');
+					})
+				} else {
+					this.$u.toast('倒计时结束后再发送');
+				}
 			},
-			loginByPassword() {
-				this.$http.httpRequest({
-					url: "/login",
-					method: "POST",
-					data: this.form2
-				}).then((res) => {
-					console.log(res.data)
-					if (res.data.code == 200) {
-						console.log("=======")
-						uni.setStorage({
-							key: 'token',
-							data: res.data.token
+			loginByCode() {
+				this.$refs.uForm.validate((valid) => {
+					if (valid) {
+						this.$http.httpRequest({
+							url: "/user/loginByCode",
+							method: "POST",
+							data: this.form
+						}).then((res) => {
+							if (res.data.code == 200) {
+								this.showToast("登录成功");
+								uni.setStorageSync('token',res.data.obj.token);
+								uni.setStorage({
+									key:'phone',
+									data:this.form.phoneNumber
+								});
+								uni.switchTab({
+									url: '../home/home'
+								});
+							} else {
+								this.$u.toast(res.data.message);
+							}
 						})
-						uni.switchTab({
-							url: "../home/home"
-						})
-					} else if (res.data.status == 500) {
-						uni.showModal({
-							title: '登录失败',
-							content: '账号或密码错误',
-						});
 					}
-				}).catch((err) => {
-
+				})
+			},
+			 loginByPassword() {
+				this.$refs.uForm1.validate((valid) => {
+					if (valid) {
+						this.$http.httpRequest({
+							url: "/user/loginByPassword",
+							method: "POST",
+							data: this.form1
+						}).then((res) => {
+							if (res.data.code == 200) {
+								uni.setStorageSync('token',res.data.obj.token);
+								uni.setStorage({
+									key:'phone',
+									data:this.form1.phoneNumber
+								});
+								this.getUserMessage(this.form1.phoneNumber);
+								uni.switchTab({
+									url: '../home/home'
+								});
+							} else {
+								this.$u.toast(res.data.message);
+							}
+						})
+					}
 				})
 			},
 			sectionChange(index) {
@@ -137,6 +190,9 @@
 				this.$emit('navselect', {
 					index: index
 				})
+			},
+			codeChange(text) {
+				this.codeTips = text;
 			},
 			register() {
 				uni.navigateTo({
@@ -154,12 +210,28 @@
 					type: 'success',
 					position: 'bottom'
 				})
+			},
+			getUserMessage(phone){
+				let ul =  "/user/info/"+phone;
+				console.log(ul)
+				this.$http.httpTokenRequest({
+					url:ul,
+					method:"GET",
+					data:''
+				}).then((res)=>{
+					uni.setStorage({
+						key:'user',
+						data:res.data.obj
+					})
+				})
 			}
 		},
 		// 必须要在onReady生命周期，因为onLoad生命周期组件可能尚未创建完毕
 		onReady() {
 			this.$refs.uForm.setRules(this.rules);
-			this.$refs.uForm1.setRules(this.rules1)
+			this.$refs.uForm1.setRules(this.rules1);
+			this.form.phoneNumber = uni.getStorageSync('phone');
+			this.form1.phoneNumber = this.form.phoneNumber;
 		},
 
 	}

@@ -11,6 +11,17 @@
 		// }
 		// ,
 		{
+		    "path" : "pages/home/home",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "到云",
+		        "enablePullDownRefresh": false,
+				"navigationStyle":"custom",
+				"enablePullDownRefresh":true
+		    }
+		 
+		},
+		{
 		    "path" : "pages/login/login",
 		    "style" :                                                                                    
 		    {
@@ -18,17 +29,7 @@
 		        "enablePullDownRefresh": false
 		    }
 		},
-		{
-            "path" : "pages/home/home",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "到云",
-                "enablePullDownRefresh": false,
-				"navigationStyle":"custom",
-				"enablePullDownRefresh":true
-            }
-         
-        },
+		
 		
 		{
 			"path" : "pages/home/my",
