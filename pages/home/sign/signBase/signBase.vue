@@ -1,7 +1,7 @@
 <template>
 	<view class="sign">
 		<view @click="sign" class="button">签到</view>
-		<u-modal v-model="show1" title="签到成功"  content="获得2积分"></u-modal>
+		<u-modal v-model="show1" title="签到成功" content="获得2积分"></u-modal>
 		<u-modal v-model="show2" title="签到失败" content="位置里老师太远"></u-modal>
 		<u-modal v-model="show3" title="签到失败" content="时间过期"></u-modal>
 	</view>

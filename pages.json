@@ -118,13 +118,13 @@
 		"list":[{
 			"text":"主页",
 			 "pagePath":"pages/home/home",
-			 "iconPath":"static/imgs/icon/班课列表-not.png",
-			 "selectedIconPath":"static/imgs/icon/班课列表.png"
+			 "iconPath":"static/imgs/icon/class-not.png",
+			 "selectedIconPath":"static/imgs/icon/class.png"
 		},{
 			"text":"我的",
 			 "pagePath":"pages/home/my",
-			 "iconPath":"static/imgs/icon/我%20的-not.png",
-			 "selectedIconPath":"static/imgs/icon/我%20的.png"
+			 "iconPath":"static/imgs/icon/my-not.png",
+			 "selectedIconPath":"static/imgs/icon/my.png"
 		}]
 	}
 }

@@ -1,24 +1,27 @@
 <template>
 	<view>
-		<view class="header" @click="gotoUserMessage">
-			<view class="touxiang">
-				<u-avatar :src="src" mode="square" size="150"></u-avatar>
-			</view>
-			<view class="message">
-				<view class="name">
-					{{user.username}}
+		
+		<view class="head">
+			<view style="height: 40rpx;"></view>
+			<view class="header" @click="gotoUserMessage">
+				<view class="touxiang">
+					<u-avatar :src="src" mode="square" size="150"></u-avatar>
 				</view>
-				<view class="id">
-					<view class="cloud">
-						到云账号 : {{user.phoneNumber}}
+				<view class="message">
+					<view class="name">
+						{{user.username}}
 					</view>
-					<view>
-						<u-cell-item arrow-direction="right"></u-cell-item>
+					<view class="id">
+						<view class="cloud">
+							到云账号 : {{user.phoneNumber}}
+						</view>
+						<view>
+							<u-cell-item arrow-direction="right"></u-cell-item>
+						</view>
 					</view>
 				</view>
 			</view>
 		</view>
-
 		<view class="lineBar">
 			<view class="son1">
 				<view style="color: #58C3E0;">{{user.exp}}</view>
@@ -88,7 +91,9 @@
 	page {
 		background-color: #F0F0F0;
 	}
-
+	.head{	
+		background-color: #FFFFFF;
+	}
 	.header {
 		width: 100%;
 		height: 300rpx;
@@ -96,7 +101,6 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-
 		.touxiang {
 			transform: translate(50%, 0);
 		}

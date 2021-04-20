@@ -149,10 +149,13 @@
 				this.$refs.uForm.validate(valid => {
 					if (valid) {
 						if (!this.agreement) return this.$u.toast('请勾选协议');
+						let registerForm = this.$u.deepClone(this.form);
+						registerForm.password = this.md5(registerForm.password);
+						registerForm.rePassword = this.md5(registerForm.rePassword);
 						this.$http.httpRequest({
 							url: '/user/register',
 							method: 'POST',
-							data: this.model
+							data: registerForm
 						}).then((res) => {
 							if (res.data.code == 200) {
 								uni.setStorage({
@@ -170,7 +173,7 @@
 							}
 						})
 					} else {
-						console.log('验证失败');
+						this.$u.toast('网络错误')
 					}
 				}); 
 			},

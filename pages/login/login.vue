@@ -136,6 +136,7 @@
 				}
 			},
 			loginByCode() {
+				// console.log(this.$md5.md5("test"));
 				this.$refs.uForm.validate((valid) => {
 					if (valid) {
 						this.$http.httpRequest({
@@ -146,16 +147,15 @@
 							if (res.data.code == 200) {
 								this.showToast("登录成功");
 								uni.setStorageSync('token',res.data.obj.token);
-								uni.setStorage({
-									key:'phone',
-									data:this.form.phoneNumber
-								});
+								this.getUserMessage(this.form.phoneNumber);
 								uni.switchTab({
 									url: '../home/home'
 								});
 							} else {
 								this.$u.toast(res.data.message);
 							}
+						}).catch((err)=>{
+							this.$u.toast('网络错误');
 						})
 					}
 				})
@@ -163,17 +163,15 @@
 			 loginByPassword() {
 				this.$refs.uForm1.validate((valid) => {
 					if (valid) {
+						let loginForm = this.$u.deepClone(this.form1);
+						//loginForm.password = this.md5(loginForm.password);
 						this.$http.httpRequest({
 							url: "/user/loginByPassword",
 							method: "POST",
-							data: this.form1
+							data: loginForm
 						}).then((res) => {
 							if (res.data.code == 200) {
 								uni.setStorageSync('token',res.data.obj.token);
-								uni.setStorage({
-									key:'phone',
-									data:this.form1.phoneNumber
-								});
 								this.getUserMessage(this.form1.phoneNumber);
 								uni.switchTab({
 									url: '../home/home'
@@ -181,6 +179,8 @@
 							} else {
 								this.$u.toast(res.data.message);
 							}
+						}).catch((err)=>{
+							this.$u.toast('网络错误');
 						})
 					}
 				})
