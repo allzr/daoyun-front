@@ -3,10 +3,10 @@
 		<view>
 			<u-steps :list="numList" :current="step"></u-steps>
 		</view>
-		<view  v-show="step == 0">
+		<view v-show="step == 0">
 			<u-form :model="form" ref="uForm">
-				<u-form-item :rightIconStyle="{color: '#888', fontSize: '32rpx'}" right-icon="kefu-ermai"
-					label="手机号" prop="phoneNumber" label-width="150">
+				<u-form-item :rightIconStyle="{color: '#888', fontSize: '32rpx'}" right-icon="kefu-ermai" label="手机号"
+					prop="phoneNumber" label-width="150">
 					<u-input placeholder="请输入手机号" v-model="form.phoneNumber" type="number"></u-input>
 				</u-form-item>
 				<u-form-item label="验证码" prop="password" label-width="150">
@@ -16,19 +16,18 @@
 				<u-button @click="loginByCode" type="primary">验证身份</u-button>
 			</u-form>
 		</view>
-		<view  v-show="step == 1">
+		<view v-show="step == 1">
 			<u-form :model="formPassword" ref="uForm1">
 				<u-form-item label="新密码" prop="password" label-width="150">
-					<u-input  type="password" v-model="formPassword.password"
-						placeholder="请输入密码"></u-input>
+					<u-input type="password" v-model="formPassword.password" placeholder="请输入密码"></u-input>
 				</u-form-item>
 				<u-form-item label="确认密码" label-width="150" prop="rePassword">
-					<u-input  type="password" v-model="formPassword.rePassword" placeholder="请确认密码"></u-input>
+					<u-input type="password" v-model="formPassword.rePassword" placeholder="请确认密码"></u-input>
 				</u-form-item>
 				<u-button @click="commit" type="primary">提交修改</u-button>
 			</u-form>
 		</view>
-		
+
 		<u-verification-code seconds="60" ref="uCode" @change="codeChange"></u-verification-code>
 	</view>
 </template>
@@ -46,9 +45,9 @@
 					phoneNumber: '',
 					password: '',
 				},
-				formPassword:{
-					password:'',
-					rePassword:''
+				formPassword: {
+					password: '',
+					rePassword: ''
 				},
 				codeTips: '获取验证码',
 				// 第一个表单验证规则
@@ -77,7 +76,7 @@
 						trigger: ['blur'],
 					}]
 				},
-				rule1:{
+				rule1: {
 					password: [{
 							required: true,
 							message: '请输入密码',
@@ -104,7 +103,7 @@
 						}
 					],
 				},
-				step:1
+				step: 0
 			}
 		},
 		methods: {
@@ -142,30 +141,48 @@
 							data: this.form
 						}).then((res) => {
 							if (res.data.code == 200) {
-								uni.setStorageSync('token',res.data.obj.token);
+								uni.setStorageSync('token', res.data.obj.token);
 								this.step = 1;
 							} else {
 								this.$u.toast(res.data.message);
 							}
-						}).catch((err)=>{
+						}).catch((err) => {
 							this.$u.toast('网络错误');
 						})
 					}
 				})
 			},
-			commit(){
-				console.log("dsfdf")
-				if(this.formPassword.password != this.formPassword.rePassword || this.formPassword.password==''){
-					console.log("eroo")
-				}else{
-					console.log('xiugaicheng')
+			commit() {
+				if (this.formPassword.password != this.formPassword.rePassword || this.formPassword.password == '') {
+					this.$u.toast('两次密码不一致')
+				} else {
+					let findBackPassword = {
+						phoneNumber: this.form.phoneNumber,
+						password: this.md5(this.formPassword.password)
+					}
+					this.$http.httpTokenRequest({
+						url: '/user/changePassword',
+						method: 'POST',
+						data: findBackPassword
+					}).then((res)=>{
+						this.$u.toast('修改成功，正在跳转登录...');
+						uni.setStorage({
+							key:'phone',
+							data:this.form.phoneNumber
+						})
+						setTimeout(()=>{
+							uni.navigateTo({
+								url: '../login'
+							});
+						},1000)
+					})
 				}
 			},
 			codeChange(text) {
 				this.codeTips = text;
 			},
 		},
-		
+
 		// 必须要在onReady生命周期，因为onLoad生命周期组件可能尚未创建完毕
 		onReady() {
 			this.$refs.uForm.setRules(this.rules);
@@ -175,12 +192,12 @@
 </script>
 
 <style lang="scss">
-	page{
+	page {
 		background-color: #FFFFFF;
 		padding: 0 20rpx;
 	}
-	
-	label{
+
+	label {
 		margin-right: 20rpx;
 	}
 </style>
