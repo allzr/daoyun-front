@@ -1,4 +1,4 @@
-let baseUrl = 'http://192.168.43.227:8081';
+let baseUrl = 'http://172.20.10.7:8081';
 
 const httpRequest = (opts) => {
 	let httpDefaultOpts = {
@@ -26,11 +26,12 @@ const httpRequest = (opts) => {
 //带Token请求
 const httpTokenRequest = (opts) => {
 	let token = uni.getStorageSync("token");
+	console.log(opts.method)
 	//此token是登录成功后后台返回保存在storage中的
 	let httpDefaultOpts = {
 		url: baseUrl + opts.url,
-		data: opts.data,
 		method: opts.method,
+		data: opts.data,
 		header: {
 			'Authorization': token,
 			"Content-Type": "application/json; charset=UTF-8"

@@ -40,9 +40,11 @@
 			</view>
 			<u-toast ref="uToast" />
 		</view>
-		
+		<!-- <navigator url="./loginGithub/loginGithub">访问官网</navigator> -->
+		<a href="https://github.com/login/oauth/authorize?client_id=601c024ea0657ca6cb13">github</a>
 		<u-verification-code seconds="60" ref="uCode" @change="codeChange"></u-verification-code>
 	</view>
+		
 </template>
 
 <script>
@@ -143,7 +145,7 @@
 							method: "POST",
 							data: this.form
 						}).then((res) => {
-							if (res.data.code == 200) {
+							if (res.data.code == 200 || res.data.code == 202) {
 								this.showToast("登录成功");
 								uni.setStorageSync('token',res.data.obj.token);
 								uni.setStorage({
@@ -151,10 +153,15 @@
 									data:this.form.phoneNumber
 								})
 								this.getUserMessage(this.form.phoneNumber);
+								let onR = {UserMessageSetting:true}
+								uni.setStorage({
+									key:'info',
+									data:onR
+								})
 								uni.switchTab({
 									url: '../home/home'
 								});
-							} else {
+							}else{
 								this.$u.toast(res.data.message);
 							}
 						}).catch((err)=>{
@@ -218,19 +225,17 @@
 					position: 'bottom'
 				})
 			},
-			getUserMessage(phone){
-				let ul =  "/user/info/"+phone;
+			getUserMessage(phoneNumber){
+				let ul =  "/user/info/"+phoneNumber;
 				this.$http.httpTokenRequest({
 					url:ul,
-					method:"GET",
+					method: "GET",
 					data:''
 				}).then((res)=>{
-					uni.setStorage({
-						key:'user',
-						data:res.data.obj
-					})
+					console.log(res)
+					uni.setStorageSync('user',res.data.obj)
 				})
-			}
+			},
 		},
 		// 必须要在onReady生命周期，因为onLoad生命周期组件可能尚未创建完毕
 		onReady() {

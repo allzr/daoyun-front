@@ -1,6 +1,7 @@
 <template>
 	<view>
 		<u-button @click="logout">退出登录</u-button>
+		<u-button @click="gotoChangePassword">修改密码</u-button>
 	</view>
 </template>
 
@@ -20,11 +21,19 @@
 							uni.removeStorage({
 								key:'token'
 							})
+							uni.removeStorage({
+								key:'info'
+							})
 							uni.reLaunch({
 								url:'../../login/login'
 							})
 						}
 					}
+				})
+			},
+			gotoChangePassword(){
+				uni.navigateTo({
+					url:"changePassword/changePassword"
 				})
 			}
 			

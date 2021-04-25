@@ -99,8 +99,24 @@
 			confirmPop1() { //确定
 				console.log(this.classid)
 			},
-
+		},
+		onReady() {
+			let info = uni.getStorageSync('info')
+			if (info.UserMessageSetting) {
+				uni.showModal({
+					title: "请修改密码",
+					content: "默认密码是您的手机号",
+					success: function(res) {
+						if (res.confirm) {
+							uni.navigateTo({
+								url: "setting/changePassword/changePassword"
+							})
+						}
+					}
+				})
+			}
 		}
+
 	}
 </script>
 
