@@ -98,7 +98,7 @@
             "path" : "pages/home/setting/setting",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
+                "navigationBarTitleText": "设置",
                 "enablePullDownRefresh": false
             }
             

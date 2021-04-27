@@ -36,15 +36,16 @@
 				<text class="findpwd" @click="findpwd">找回密码</text>
 			</view>
 			<view>
-				
+
 			</view>
 			<u-toast ref="uToast" />
 		</view>
+		<!-- <u-button type="default" @click="githubLogin()">github</u-button> -->
 		<!-- <navigator url="./loginGithub/loginGithub">访问官网</navigator> -->
-		<a href="https://github.com/login/oauth/authorize?client_id=601c024ea0657ca6cb13">github</a>
+		<a href="https://github.com/login/oauth/authorize?client_id=601c024ea0657ca6cb13">github登录</a>
 		<u-verification-code seconds="60" ref="uCode" @change="codeChange"></u-verification-code>
 	</view>
-		
+
 </template>
 
 <script>
@@ -145,32 +146,30 @@
 							method: "POST",
 							data: this.form
 						}).then((res) => {
-							if (res.data.code == 200 || res.data.code == 202) {
-								this.showToast("登录成功");
-								uni.setStorageSync('token',res.data.obj.token);
+							this.showToast("登录成功");
+							uni.setStorageSync('token', res.data.obj.token);
+							uni.setStorage({
+								key: 'phone',
+								data: this.form.phoneNumber
+							})
+							this.getUserMessage();
+							if (res.data.code == 202) {
+								let onR = {
+									UserMessageSetting: true
+								}
 								uni.setStorage({
-									key:'phone',
-									data:this.form.phoneNumber
+									key: 'info',
+									data: onR
 								})
-								this.getUserMessage(this.form.phoneNumber);
-								let onR = {UserMessageSetting:true}
-								uni.setStorage({
-									key:'info',
-									data:onR
-								})
-								uni.switchTab({
-									url: '../home/home'
-								});
-							}else{
-								this.$u.toast(res.data.message);
 							}
-						}).catch((err)=>{
-							this.$u.toast('网络错误');
+							uni.switchTab({
+								url: '../home/home'
+							});
 						})
 					}
 				})
 			},
-			 loginByPassword() {
+			loginByPassword() {
 				this.$refs.uForm1.validate((valid) => {
 					if (valid) {
 						let loginForm = this.$u.deepClone(this.form1);
@@ -180,20 +179,17 @@
 							method: "POST",
 							data: loginForm
 						}).then((res) => {
-							if (res.data.code == 200) {
-								uni.setStorageSync('token',res.data.obj.token);
-								uni.setStorage({
-									key:'phone',
-									data:loginForm.phoneNumber
-								})
-								this.getUserMessage(this.form1.phoneNumber);
-								uni.switchTab({
-									url: '../home/home'
-								});
-							} else {
-								this.$u.toast(res.data.message);
-							}
-						}).catch((err)=>{
+
+							uni.setStorageSync('token', res.data.obj.token);
+							uni.setStorage({
+								key: 'phone',
+								data: loginForm.phoneNumber
+							})
+							this.getUserMessage();
+							uni.switchTab({
+								url: '../home/home'
+							});
+						}).catch((err) => {
 							this.$u.toast('网络错误');
 						})
 					}
@@ -225,17 +221,15 @@
 					position: 'bottom'
 				})
 			},
-			getUserMessage(phoneNumber){
-				let ul =  "/user/info/"+phoneNumber;
+			getUserMessage() {
 				this.$http.httpTokenRequest({
-					url:ul,
+					url: "/user/getInfo",
 					method: "GET",
-					data:''
-				}).then((res)=>{
-					console.log(res)
-					uni.setStorageSync('user',res.data.obj)
+					data: ''
+				}).then((res) => {
+					uni.setStorageSync('user', res.data.obj)
 				})
-			},
+			}
 		},
 		// 必须要在onReady生命周期，因为onLoad生命周期组件可能尚未创建完毕
 		onReady() {
@@ -243,6 +237,40 @@
 			this.$refs.uForm1.setRules(this.rules1);
 			this.form.phoneNumber = uni.getStorageSync('phone');
 			this.form1.phoneNumber = this.form.phoneNumber;
+		},
+		computed: {
+			//计算属性获取,url中query code 参数
+			code() {
+				const urlParams = new URLSearchParams(window.location.search);
+				const myParam = urlParams.get('code');
+				if(myParam != null){
+					return myParam
+				}
+				return false;
+			},
+		},
+		mounted() {
+			//获取配置cong golang 后端
+			if(this.code){
+				uni.showLoading({
+					title:'登录中...',
+					mask: true
+				})
+				this.$http.httpRequest({
+					url:'/githubLogin',
+					method:'POST',
+					data:this.code
+				}).then((res)=>{	
+					uni.setStorageSync('token', res.data.obj);
+					this.getUserMessage()
+					setTimeout(()=>{
+						uni.hideLoading()
+						window.location.href = "http://localhost:8080"
+					},1000)
+				}).catch((err)=>{
+					uni.hideLoading()
+				})
+			}
 		},
 
 	}

@@ -1,4 +1,4 @@
-let baseUrl = 'http://172.20.10.7:8081';
+let baseUrl = 'http://192.168.43.34:8081';
 
 const httpRequest = (opts) => {
 	let httpDefaultOpts = {
@@ -13,7 +13,16 @@ const httpRequest = (opts) => {
 	let promise = new Promise(function(resolve, reject) {
 		uni.request(httpDefaultOpts).then(
 			(res) => {
-				resolve(res[1])
+				if (res[1].data.code == 200 || res[1].data.code == 202) {
+					resolve(res[1])
+				}else{
+					uni.showToast({
+						icon: 'none',
+						title: res[1].data.message,
+						duration: 1000
+					});
+					return false
+				}
 			}
 		).catch(
 			(response) => {
@@ -26,14 +35,13 @@ const httpRequest = (opts) => {
 //带Token请求
 const httpTokenRequest = (opts) => {
 	let token = uni.getStorageSync("token");
-	console.log(opts.method)
 	//此token是登录成功后后台返回保存在storage中的
 	let httpDefaultOpts = {
 		url: baseUrl + opts.url,
 		method: opts.method,
 		data: opts.data,
 		header: {
-			'Authorization': token,
+			'Authorization':token,
 			"Content-Type": "application/json; charset=UTF-8"
 		},
 		dataType: 'json',
@@ -41,7 +49,16 @@ const httpTokenRequest = (opts) => {
 	let promise = new Promise(function(resolve, reject) {
 		uni.request(httpDefaultOpts).then(
 			(res) => {
-				resolve(res[1])
+				if (res[1].data.code == 200 || res[1].data.code == 202) {
+					resolve(res[1])
+				}else{
+					uni.showToast({
+						icon: 'none',
+						title: res[1].data.message,
+						duration: 1000
+					});
+					return false
+				}
 			}
 		).catch(
 			(response) => {

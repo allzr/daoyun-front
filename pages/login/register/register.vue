@@ -34,9 +34,9 @@
 				勾选代表同意到云的版权协议
 			</view>
 		</view>
-		
+
 		<u-toast ref="uToast" />
-		
+
 		<u-button @click="submit" type="primary">提交</u-button>
 		<u-verification-code seconds="60" ref="uCode" @change="codeChange"></u-verification-code>
 	</view>
@@ -157,25 +157,19 @@
 							method: 'POST',
 							data: registerForm
 						}).then((res) => {
-							if (res.data.code == 200) {
-								uni.setStorage({
-									key:'phone',
-									data:this.model.phoneNumber
-								})
-								this.$u.toast('注册成功，正在跳转登录...');
-								setTimeout(()=>{
-									uni.navigateTo({
-										url: '../login'
-									});
-								},1000)
-							} else {
-								this.$u.toast(res.data.message);
-							}
+							uni.setStorage({
+								key: 'phone',
+								data: this.model.phoneNumber
+							})
+							this.$u.toast('注册成功，正在跳转登录...');
+							setTimeout(() => {
+								uni.navigateTo({
+									url: '../login'
+								});
+							}, 1000)
 						})
-					} else {
-						this.$u.toast('网络错误')
 					}
-				}); 
+				});
 			},
 			// 勾选版权协议
 			checkboxChange(e) {

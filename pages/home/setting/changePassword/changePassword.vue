@@ -21,7 +21,7 @@
 					password: '',
 					rePassword: ''
 				},
-	
+
 				rule1: {
 					password: [{
 							required: true,
@@ -53,9 +53,9 @@
 		},
 		methods: {
 			commit() {
-				if (this.formPassword.password == ''){
+				if (this.formPassword.password == '') {
 					this.$u.toast('密码不能为空')
-				}else if (this.formPassword.password != this.formPassword.rePassword) {
+				} else if (this.formPassword.password != this.formPassword.rePassword) {
 					this.$u.toast('两次密码不一致')
 				} else {
 					let phone = uni.getStorageSync('phone')
@@ -67,18 +67,15 @@
 						url: '/user/changePassword',
 						method: 'POST',
 						data: findBackPassword
-					}).then((res)=>{
-						if(res.data.code == 200){
-							this.$u.toast('修改成功');
-							uni.removeStorage({
-								key:'info'
-							})
-							uni.switchTab({
-								url:'../../home'
-							})
-						}else{
-							this.$u.toast('修改失败');
-						}
+					}).then((res) => {
+						this.$u.toast('修改成功');
+						uni.removeStorage({
+							key: 'info'
+						})
+						uni.switchTab({
+							url: '../../home'
+						})
+
 					})
 				}
 			},

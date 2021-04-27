@@ -146,8 +146,6 @@
 							} else {
 								this.$u.toast(res.data.message);
 							}
-						}).catch((err) => {
-							this.$u.toast('网络错误');
 						})
 					}
 				})
