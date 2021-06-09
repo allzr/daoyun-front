@@ -9,7 +9,8 @@
 				:label-position="labelPosition" label="真实姓名">
 				<u-input :border="border" placeholder="请输入真实姓名" v-model="user.realName" type="text"></u-input>
 			</u-form-item>
-
+			
+			
 
 			<u-form-item :label-position="labelPosition" label="出生年份" label-width="150">
 				<u-input :border="border" placeholder="请输入出生年份" prop="bornYear" v-model="user.bornYear" type="text"></u-input>
@@ -23,6 +24,9 @@
 				<u-input :border="border" placeholder="请输入学院"  v-model="user.collegeName" type="text"></u-input>
 			</u-form-item>
 			
+			<u-form-item :label-position="labelPosition" label="学号" label-width="150">
+				<u-input :border="border" placeholder="请输入学号" v-model="user.stuTeaAdmNumber" type="text"></u-input>
+			</u-form-item>
 					
 			<u-form-item :label-position="labelPosition" label="身份类别" label-width="150">
 				<u-radio-group @change="radioGroupChange" :width="radioCheckWidth" :wrap="radioCheckWrap">
@@ -62,6 +66,7 @@
 					sex: 0,
 					userType: 0,
 					username: "",
+					stuTeaAdmNumber:''
 				},
 				agreement: false,
 				rules: {
@@ -95,7 +100,7 @@
 						checked: false,
 					},
 				],
-
+				
 				radioList1: [{
 						name: '男',
 						checked: true,

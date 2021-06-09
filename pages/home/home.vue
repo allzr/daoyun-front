@@ -14,10 +14,11 @@
 						:createTime="item.createTime" :id='item.id' :classID="item.classID"></classCard2>
 				</view>
 			</view>
+			
 			<view v-if="index == 1">
 				<view v-for="(item,idx) in classadd" :key='idx' style="border-bottom: #ECF5FF 0.5rpx solid;">
 					<classCard :className="item.className" :teacherName="item.teacherName" :createTime="item.createTime"
-						:id='item.id'></classCard>
+						:id='item.id' :classID="item.classID"></classCard>
 				</view>
 			</view>
 		</view>
@@ -69,6 +70,7 @@
 					className: "暂无加入",
 					createTime: "",
 					id: "",
+					classID: "",
 					teacherName: "点击右上角，加入班课"
 				}],
 				showPop: false,
@@ -83,13 +85,12 @@
 		onPullDownRefresh() {
 			setTimeout(function() {
 				uni.stopPullDownRefresh();
-				uni.showToast({
-					title: "刷新成功",
-					duration: 500
-				})
 			}, 1000)
 			this.$api.getCreateClass().then((data) => {
 				this.classcreate = data
+			})
+			this.$api.getJoinClass().then(data=>{
+				this.classadd = data
 			})
 		},
 		methods: {
@@ -115,19 +116,23 @@
 					});
 				}
 			},
-			confirmPop() { //确定
-				if (this.classid.length == 8){
-					this.$api.joinClass(this.classid).then((res)=>{
-						
-					})
-				}else{
-					this.showToastFault('请输入8位课程号')
-				}
-			},
 			getClass() {
 				this.$api.getCreateClass().then((data) => {
 					this.classcreate = data
 				})
+				this.$api.getJoinClass().then(data=>{
+					this.classadd = data
+				})
+			},
+			confirmPop() { //确定
+				if (this.classid.length == 8){
+					this.$api.joinClass(this.classid).then((res)=>{
+						this.showToast('加入成功')
+					})
+				}else{
+					this.showToastFault('请输入8位课程号')
+				}
+				this.classid = ''
 			},
 			confirmPop1() { //确定
 				if (this.form.className == '' || this.form.openYear == '') {

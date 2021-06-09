@@ -32,7 +32,8 @@
 			className: "",
 			teacherName: "",
 			createTime: "",
-			id:""
+			id:"",
+			classID:""
 		},
 		data() {
 			return {
@@ -42,12 +43,12 @@
 		methods: {
 			sign() {
 				uni.navigateTo({
-					url: "../../pages/home/sign/signBase/signBase"
+					url:"../../pages/home/class/classForStudent/classForStudent?classID="+ this.classID+"&id="+this.id
 				})
 			},
 			classDetail(){
 				uni.navigateTo({
-					url:"../../pages/home/class/classForStudent/classForStudent"
+					url:"../../pages/home/class/classForStudent/classForStudent?classID="+ this.classID+"&id="+this.id
 				})
 			}
 		}

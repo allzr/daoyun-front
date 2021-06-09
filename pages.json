@@ -69,14 +69,6 @@
             
         }
         ,{
-            "path" : "pages/home/sign/signBase/signBase",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        },{
             "path" : "pages/home/class/classForStudent/classForStudent",
             "style" :                                                                                    
             {

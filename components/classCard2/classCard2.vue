@@ -15,7 +15,6 @@
 		<view>
 			<u-cell-item arrow-direction="right"></u-cell-item>
 		</view>
-		
 	</view>
 </template>
 
@@ -42,7 +41,7 @@
 			},
 			classDetail(){
 				uni.navigateTo({
-					url:"../../pages/home/class/classForTeacher/classForTeacher?classID="+ this.classID
+					url:"../../pages/home/class/classForTeacher/classForTeacher?classID="+ this.classID+"&id="+this.id
 				})
 			}
 		}
