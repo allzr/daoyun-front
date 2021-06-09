@@ -58,7 +58,7 @@
 		},
 		data() {
 			return {
-				src: '/static/logo.png',
+				src: '/static/头像.png',
 				name: "小发",
 				id: "825655513",
 				realName: "点击设置真实姓名",

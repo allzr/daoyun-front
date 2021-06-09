@@ -8,9 +8,13 @@
 			<view class="setting">
 				<u-cell-group>
 					<u-cell-item class="line" title="修改密码" :arrow="true" arrow-direction="right" @click="gotoChangePassword()"></u-cell-item>
-					<u-cell-item class="line" title="退出登录" :arrow="true" arrow-direction="right" @click="logout"></u-cell-item>
-					<!-- <u-cell-item class="line" style="border-bottom: #E4E7ED solid 0.1rpx;" icon="setting" title="设置" :arrow="true" arrow-direction="right" @click='gotoSetting'></u-cell-item> -->
+					<u-cell-item class="line" title="用户设置" :arrow="true" arrow-direction="right" @click="usersetting"></u-cell-item>
 				</u-cell-group>
+				<br>
+				<u-cell-group>
+					<u-cell-item class="line" title="退出登录" :arrow="true" arrow-direction="right" @click="logout"></u-cell-item>
+				</u-cell-group>
+
 			</view>
 		</view>
 	</view>
@@ -45,6 +49,11 @@
 			gotoChangePassword(){
 				uni.navigateTo({
 					url:"changePassword/changePassword"
+				})
+			},
+			usersetting(){
+				uni.navigateTo({
+					url:'../myMessage/myMessage'
 				})
 			}
 			

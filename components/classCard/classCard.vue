@@ -31,11 +31,12 @@
 		props: {
 			className: "",
 			teacherName: "",
-			createTime: ""
+			createTime: "",
+			id:""
 		},
 		data() {
 			return {
-				src: '/static/logo.png'
+				src: '/static/天气.png'
 			};
 		},
 		methods: {

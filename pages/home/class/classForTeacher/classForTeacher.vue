@@ -1,17 +1,21 @@
 <template>
+	
 	<view>
 		<view class="u-page">
 			<view v-if="current == 0">
-				<u-button @click="showQrcode">生成班课二维码</u-button>
-				<view style="margin: 40upx;">
-					<ayQrcode ref="qrcode" :modal="modal_qr" :url="classid" @hideQrcode="hideQrcode" :height="300"
+				<view>
+					<u-button @click="showQrcode" type="success">生成班课二维码</u-button>
+				</view>
+				
+				<view style="padding-top: 20rpx;padding-right: 50rpx;">
+					<ayQrcode ref="qrcode" :modal="modal_qr" :url="classId" @hideQrcode="hideQrcode" :height="300"
 						:width="300" themeColor="#33CCCC"/>
 				</view>
 			</view>
 			<view v-if="current == 1">
 				<view @click="sign" class="button">发起签到</view>
 			</view>
-			<view v-if="current == 2">成员</view>
+			<view v-if="current == 2" class="button">成员</view>
 		</view>
 		<u-action-sheet :list="list" @click="click" v-model="show"></u-action-sheet>
 		<!-- 与包裹页面所有内容的元素u-page同级，且在它的下方 -->
@@ -35,6 +39,9 @@
 	export default {
 		components: {
 			ayQrcode,
+		},
+		onLoad(option) {
+			this.classId = option.classID
 		},
 		data() {
 			return {
@@ -68,7 +75,7 @@
 				current: 0,
 				time: 0,
 				border: true,
-				classid: 'www.baidu.com'
+				classId: ''
 			}
 		},
 		methods: {

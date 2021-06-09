@@ -1,15 +1,15 @@
 <template>
-	<view class="classsCard2" @click="classDetail">
-		<view class="picture">
+	<view class="classsCard2">
+		<view class="picture"  @click="classDetail">
 			<u-avatar :src="src" mode="square" size="140"></u-avatar>
 		</view>
 		<view class="message">
-			<view style="font-size: 40rpx; font-weight: bolder;" >
+			<view style="font-size: 40rpx; font-weight: bolder;"  @click="classDetail">
 				{{className}}
 			</view>
 			<view class="classDetail" >
 				<view style="float: left;">{{teacherName}}</view>
-				<view style="float: righ; color: #606060;">{{createTime}}</view>
+				<view style="float: righ; color: #606060;">{{classID}}</view>
 			</view>
 		</view>
 		<view>
@@ -24,12 +24,13 @@
 		props:{
 			className:"",
 			teacherName:"",
-			createTime:""
+			createTime:"",
+			id:"",
+			classID:""
 		},
 		data() {
 			return {
-				src: '/static/logo.png',
-				
+				src: '/static/照明.png',
 			};
 		},
 		methods:{
@@ -41,7 +42,7 @@
 			},
 			classDetail(){
 				uni.navigateTo({
-					url:"../../pages/home/class/classForTeacher/classForTeacher"
+					url:"../../pages/home/class/classForTeacher/classForTeacher?classID="+ this.classID
 				})
 			}
 		}

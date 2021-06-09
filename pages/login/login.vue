@@ -35,9 +35,6 @@
 				<text class="regist" @click="register">注册新账号</text>
 				<text class="findpwd" @click="findpwd">找回密码</text>
 			</view>
-			<view>
-
-			</view>
 			<u-toast ref="uToast" />
 		</view>
 		<!-- <u-button type="default" @click="githubLogin()">github</u-button> -->

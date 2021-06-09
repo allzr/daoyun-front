@@ -5,17 +5,26 @@
 		</view>
 
 		<view class="body">
-			<view>
+			<view style="padding-bottom: 10rpx;">
 				<u-search placeholder="请输入课程名称" v-model="keyword"></u-search>
 			</view>
 			<view v-if="index == 0">
-				<classCard2 :className="className" :teacherName="teacherName" :createTime="createTime"></classCard2>
+				<view v-for="(item,idx) in classcreate" :key='idx' style="border-bottom: #ECF5FF 0.5rpx solid;">
+					<classCard2 :className="item.className" :teacherName="item.teacherName"
+						:createTime="item.createTime" :id='item.id' :classID="item.classID"></classCard2>
+				</view>
 			</view>
 			<view v-if="index == 1">
-				<classCard :className="className" :teacherName="teacherName" :createTime="createTime"></classCard>
+				<view v-for="(item,idx) in classadd" :key='idx' style="border-bottom: #ECF5FF 0.5rpx solid;">
+					<classCard :className="item.className" :teacherName="item.teacherName" :createTime="item.createTime"
+						:id='item.id'></classCard>
+				</view>
 			</view>
 		</view>
-		<u-modal v-model="showPop" title="加入班课" show-cancel-button @cancel="cancelPop" @confirm="confirmPop">
+
+
+		<!-- 加入班课组件 -->
+		<u-modal v-model="showPop" title="加入班课" show-cancel-button @confirm="confirmPop">
 			<view class="slot-content">
 				<view>
 					<input type='text' placeholder="请输入班课号" v-model="classid" />
@@ -23,41 +32,52 @@
 			</view>
 		</u-modal>
 
-		<u-modal v-model="showPop1" title="创建班课" show-cancel-button @cancel="cancelPop1" @confirm="confirmPop1">
-			<view class="slot-content">
-				<br>
-				<view>
-					<input type='text' placeholder="请输入班课名称" v-model="form.className">
-				</view>
-				<br>
-				<view>
-					<input type='text' placeholder="请输入开始时间" v-model="form.createTime">
-				</view>
-				<br>
+		<!-- 创建班课组件 -->
+		<u-modal v-model="showPop1" title="创建班课" show-cancel-button @confirm="confirmPop1">
+			<view class="calssForm">
+				<u-form :model="form" ref="uForm">
+					<u-form-item label="课名">
+						<u-input placeholder="请输入班课名称" v-model="form.className" />
+					</u-form-item>
+					<u-form-item label="时间">
+						<u-input placeholder="请输入开课时间" v-model="form.openYear" />
+					</u-form-item>
+				</u-form>
 			</view>
 		</u-modal>
-
+		<u-toast ref="uToast" />
 	</view>
 </template>
 <script>
 	export default {
 		onLoad() {
 			this.checkLogin();
+			this.getClass();
 		},
 		data() {
 			return {
 				index: 0,
 				keyword: '',
-				className: "工程训练",
-				teacherName: "老池",
-				createTime: "2021-01",
+				classcreate: [{
+					className: "暂无创建",
+					createTime: "",
+					id: "",
+					classID: "",
+					teacherName: "点击右上角，创建班课"
+				}],
+				classadd: [{
+					className: "暂无加入",
+					createTime: "",
+					id: "",
+					teacherName: "点击右上角，加入班课"
+				}],
 				showPop: false,
 				showPop1: false,
 				classid: '',
 				form: {
 					className: '',
-					createTime: '',
-				}
+					openYear: '',
+				},
 			}
 		},
 		onPullDownRefresh() {
@@ -68,6 +88,9 @@
 					duration: 500
 				})
 			}, 1000)
+			this.$api.getCreateClass().then((data) => {
+				this.classcreate = data
+			})
 		},
 		methods: {
 			navselect({
@@ -93,12 +116,52 @@
 				}
 			},
 			confirmPop() { //确定
-				console.log(this.classid)
-
+				if (this.classid.length == 8){
+					this.$api.joinClass(this.classid).then((res)=>{
+						
+					})
+				}else{
+					this.showToastFault('请输入8位课程号')
+				}
+			},
+			getClass() {
+				this.$api.getCreateClass().then((data) => {
+					this.classcreate = data
+				})
 			},
 			confirmPop1() { //确定
-				console.log(this.classid)
+				if (this.form.className == '' || this.form.openYear == '') {
+					this.showToastFault('输入不正确')
+				} else {
+					const data = {
+						openYear: Number(this.form.openYear),
+						course: {
+							name: this.form.className,
+						}
+					}
+					this.$http.httpTokenRequest({
+						url: "/course/create",
+						method: "POST",
+						data: data
+					}).then((res) => {
+						this.showToast('创建成功')
+					})
+				}
 			},
+			showToast(message) {
+				this.$refs.uToast.show({
+					title: message,
+					type: 'success',
+					position: 'center'
+				})
+			},
+			showToastFault(message) {
+				this.$refs.uToast.show({
+					title: message,
+					type: 'error',
+					position: 'center'
+				})
+			}
 		},
 		onReady() {
 			let info = uni.getStorageSync('info')
@@ -116,7 +179,6 @@
 				})
 			}
 		}
-
 	}
 </script>
 
@@ -132,5 +194,10 @@
 		padding-left: 30rpx;
 		font-size: 24rpx;
 		color: $u-content-color;
+	}
+
+	.calssForm {
+		padding-left: 30rpx;
+		padding-right: 30rpx;
 	}
 </style>

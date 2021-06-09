@@ -10,7 +10,6 @@
 				<u-input :border="border" placeholder="请输入真实姓名" v-model="user.realName" type="text"></u-input>
 			</u-form-item>
 
-			
 
 			<u-form-item :label-position="labelPosition" label="出生年份" label-width="150">
 				<u-input :border="border" placeholder="请输入出生年份" prop="bornYear" v-model="user.bornYear" type="text"></u-input>
@@ -33,8 +32,8 @@
 				</u-radio-group>
 			</u-form-item>
 
-			<u-form-item :label-position="labelPosition" label="用户性别" label-width="150">
-				<u-radio-group @change="radioGroupChange1" :width="radioCheckWidth" :wrap="radioCheckWrap">
+			<u-form-item :label-position="labelPosition" label="用户性别" label-width="150" >
+				<u-radio-group @change="radioGroupChange1" :width="radioCheckWidth" :wrap="radioCheckWrap" >
 					<u-radio shape="circle" v-for="(item, index) in radioList1" :key="index" :name="item.name">
 						{{ item.name }}
 					</u-radio>
@@ -42,21 +41,22 @@
 			</u-form-item>
 		</u-form>
 		<u-toast ref="uToast" />
-		<u-button @click="submit" type="primary">提交</u-button>
+		<u-button @click="submit" type="primary">保存</u-button>
 	</view>
 </template>
 
 <script>
 	export default {
+		onLoad() {
+			this.user = uni.getStorageSync('user')
+		},
 		data() {
 			let that = this;
 			return {
-				years: [],
 				show: false,
 				user: {
 					bornYear: '2000',
 					collegeName: null,
-					phoneNumber: "17396510930",
 					realName: null,
 					schoolName: null,
 					sex: 0,
@@ -89,24 +89,20 @@
 				radioList: [{
 						name: '老师',
 						checked: true,
-						disabled: false
 					},
 					{
 						name: '学生',
 						checked: false,
-						disabled: false
 					},
 				],
 
 				radioList1: [{
 						name: '男',
 						checked: true,
-						disabled: false
 					},
 					{
 						name: '女',
-						checked: false,
-						disabled: false
+						checked: false,			
 					},
 				],
 
@@ -125,36 +121,16 @@
 		},
 		methods: {
 			submit() {
-				// this.$refs.uForm.validate(valid => {
-				// 	if (valid) {
-				// 		if (!this.agreement) return this.$u.toast('请勾选协议');
-				// 		let registerForm = this.$u.deepClone(this.form);
-				// 		registerForm.password = this.md5(registerForm.password);
-				// 		registerForm.rePassword = this.md5(registerForm.rePassword);
-				// 		this.$http.httpRequest({
-				// 			url: '/user/register',
-				// 			method: 'POST',
-				// 			data: registerForm
-				// 		}).then((res) => {
-				// 			if (res.data.code == 200) {
-				// 				uni.setStorage({
-				// 					key: 'phone',
-				// 					data: this.model.phoneNumber
-				// 				})
-				// 				this.$u.toast('注册成功，正在跳转登录...');
-				// 				setTimeout(() => {
-				// 					uni.navigateTo({
-				// 						url: '../login'
-				// 					});
-				// 				}, 1000)
-				// 			} else {
-				// 				this.$u.toast(res.data.message);
-				// 			}
-				// 		})
-				// 	} else {
-				// 		this.$u.toast('网络错误')
-				// 	}
-				// });
+				this.$refs.uForm.validate(valid => {
+					if (valid) {
+						this.$api.updateUserInfo(this.user).then((res)=>{
+							this.showToast(res.data.message)
+							if(res.data.code == 200){
+								uni.setStorageSync('user',this.user)
+							}
+						})
+					}
+				});
 			},
 			radioGroupChange(e) {
 				if (e == '老师') {
@@ -172,7 +148,14 @@
 			},
 			confirm(e) {
 				this.user.brithDay = String(e[0].label)
-			}
+			},
+			showToast(message) {
+				this.$refs.uToast.show({
+					title: message,
+					type: 'success',
+					position: 'center'
+				})
+			},
 		}
 	};
 </script>
