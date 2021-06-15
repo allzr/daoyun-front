@@ -4,83 +4,90 @@ import user from './user.js'
 let getCreateClass = () => {
 	let userId = user.getUserId()
 	return http.httpTokenRequest2({
-		url:'/course/selectById/'+String(userId),
-		method:'GET',
-	}) 	
+		url: '/course/selectById/' + String(userId),
+		method: 'GET',
+	})
 }
 
-let updateUserInfo = (user)=>{
+let updateUserInfo = (user) => {
 	return http.httpTokenRequest({
-		url:'/user/updateUserInfo',
-		method:'POST',
-		data:user
+		url: '/user/updateUserInfo',
+		method: 'POST',
+		data: user
 	})
 }
 
-let joinClass = (classID)=>{
+let joinClass = (classID) => {
 	return http.httpTokenRequest2({
-		url:'/studentcourse/joinClass/'+classID,
-		method:'POST',
+		url: '/studentcourse/joinClass/' + classID,
+		method: 'POST',
 	})
 }
 
-let getJoinClass = ()=>{
+let getJoinClass = () => {
 	return http.httpTokenRequest2({
-		url:'/studentcourse/selectByStudent',
-		method:'GET',
+		url: '/studentcourse/selectByStudent',
+		method: 'GET',
 	})
 }
 
-let getClassStudents = (classID)=>{
+let getClassStudents = (classID) => {
 	return http.httpTokenRequest2({
-		url:'/studentcourse/selectByClass/'+classID,
-		method:'GET'
+		url: '/studentcourse/selectByClass/' + classID,
+		method: 'GET'
 	})
 }
 
-let createLimitTimeSign = (sign)=>{
+let createLimitTimeSign = (sign) => {
 	return http.httpTokenRequest2({
-		url:'/sign/teaBeginByTime',
-		method:'POST',
-		data:sign
+		url: '/sign/teaBeginByTime',
+		method: 'POST',
+		data: sign
 	})
 }
 
-let createBaseSign = (sign)=>{
+let createBaseSign = (sign) => {
 	return http.httpTokenRequest2({
-		url:'/sign/teaBegin',
-		method:'POST',
-		data:sign
+		url: '/sign/teaBegin',
+		method: 'POST',
+		data: sign
 	})
 }
 
-let studentSign = (sign)=>{
+let studentSign = (sign) => {
 	return http.httpTokenRequest2({
-		url:'/sign/stuSign',
-		method:'POST',
-		data:sign
+		url: '/sign/stuSign',
+		method: 'POST',
+		data: sign
 	})
 }
 
-let getLocal = ()=>{
-	return new Promise(function(resolve, reject){
+let classDetail = (classID) => {
+	return http.httpTokenRequest2({
+		url: '/course/selectByClassID/' + classID,
+		method: 'GET'
+	})
+}
+
+let getLocal = () => {
+	return new Promise(function(resolve, reject) {
 		uni.getLocation({
 			type: 'wgs84',
 			success: function(res) {
 				let local = {
-					locationX:String(res.latitude),
-					locationY:String(res.longitude)
+					locationX: String(res.latitude),
+					locationY: String(res.longitude)
 				}
 				resolve(local)
 			},
-			fail:function(res){
+			fail: function(res) {
 				reject(res)
 			}
 		})
 	})
 }
 
-export default{
+export default {
 	getCreateClass,
 	updateUserInfo,
 	joinClass,
@@ -89,5 +96,6 @@ export default{
 	createLimitTimeSign,
 	createBaseSign,
 	studentSign,
-	getLocal
+	getLocal,
+	classDetail
 }
