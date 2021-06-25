@@ -3,11 +3,11 @@
 		<view class="picture" @click="classDetail">
 			<u-avatar :src="src" mode="square" size="140"></u-avatar>
 		</view>
-		<view class="message">
-			<view style="font-size: 40rpx; font-weight: bolder;" @click="classDetail">
+		<view class="message" @click="classDetail">
+			<view style="font-size: 40rpx; font-weight: bolder;">
 				{{className}}
 			</view>
-			<view class="classDetail" @click="classDetail">
+			<view class="classDetail" >
 				<view style="float: left;">{{teacherName}}</view>
 				<view style="float: righ; color: #606060;">{{createTime}}</view>
 			</view>
@@ -37,7 +37,7 @@
 		},
 		data() {
 			return {
-				src: '/static/天气.png'
+				src: '/static/p1.png'
 			};
 		},
 		methods: {

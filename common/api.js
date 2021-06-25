@@ -87,6 +87,28 @@ let getLocal = () => {
 	})
 }
 
+let getCode = () => {
+	return new Promise(function(resolve, reject) {
+		uni.scanCode({
+			success: function(res) {
+				resolve(res.result)
+			}
+		})
+	})
+}
+
+let getClassSign = (id) => {
+	return http.httpTokenRequest2({
+		url: '/sign/getSignInfo/' + id,
+	})
+}
+
+let getSignStudents = (signId)=>{
+	return http.httpTokenRequest2({
+		url:"/sign/getStudentSignInfo/"+signId
+	})
+}
+
 export default {
 	getCreateClass,
 	updateUserInfo,
@@ -97,5 +119,8 @@ export default {
 	createBaseSign,
 	studentSign,
 	getLocal,
-	classDetail
+	classDetail,
+	getCode,
+	getClassSign,
+	getSignStudents
 }

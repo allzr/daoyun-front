@@ -113,6 +113,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/home/class/signMsg/signMsg",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "历史签到",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"easycom": {
 		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"

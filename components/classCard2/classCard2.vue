@@ -3,8 +3,8 @@
 		<view class="picture"  @click="classDetail">
 			<u-avatar :src="src" mode="square" size="140"></u-avatar>
 		</view>
-		<view class="message">
-			<view style="font-size: 40rpx; font-weight: bolder;"  @click="classDetail">
+		<view class="message" @click="classDetail">
+			<view style="font-size: 40rpx; font-weight: bolder;"  >
 				{{className}}
 			</view>
 			<view class="classDetail" >
@@ -29,7 +29,7 @@
 		},
 		data() {
 			return {
-				src: '/static/照明.png',
+				src: '/static/p2.png',
 			};
 		},
 		methods:{

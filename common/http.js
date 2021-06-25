@@ -1,4 +1,4 @@
-let baseUrl = 'http://192.168.0.109:8081';
+let baseUrl = 'http://47.98.165.155:8081';
 
 const httpRequest = (opts) => {
 	let httpDefaultOpts = {

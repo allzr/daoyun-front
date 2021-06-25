@@ -23,7 +23,6 @@
 			</view>
 		</view>
 
-
 		<!-- 加入班课组件 -->
 		<u-modal v-model="showPop" title="加入班课" show-cancel-button @confirm="confirmPop">
 			<view class="slot-content">
@@ -39,7 +38,7 @@
 				<u-form :model="form" ref="uForm">
 					<u-form-item label="课名" prop="className">
 						<u-input placeholder="请输入班课名称" v-model="form.className" />
-						<u-icon name="arrow-down-fill" @click="classSelect=true"></u-icon>
+						<u-icon name="arrow-down-fill" @click="selectClass()"></u-icon>
 					</u-form-item>
 					<u-form-item label="班级">
 						<u-input placeholder="请输入班级" v-model="form.classNumber" />
@@ -54,7 +53,7 @@
 							@click="selectShow = true"></u-input>
 					</u-form-item>
 					<u-form-item label="学院" prop="collegeName">
-						<u-input  v-model="form.collegeName"></u-input>
+						<u-input v-model="form.collegeName"></u-input>
 					</u-form-item>
 				</u-form>
 			</view>
@@ -71,7 +70,8 @@
 			</u-cell-group>
 		</u-modal>
 		<u-select mode="mutil-column-auto" :list="schoolList" v-model="selectShow" @confirm="selectConfirm"></u-select>
-		<u-select mode="single-column" :list="classNameList" v-model="classSelect" @confirm="classSelectConfirm"></u-select>
+		<u-select mode="single-column" :list="classNameList" v-model="classSelect" @confirm="classSelectConfirm">
+		</u-select>
 		<u-select mode="single-column" :list="yearList" v-model="selectShow2" @confirm="selectConfirm2"></u-select>
 		<u-keyboard ref="uKeyboard" mode="number" @change="valChange" @backspace="backspace" v-model="showKeyboard"
 			:mask="false"></u-keyboard>
@@ -82,13 +82,30 @@
 	export default {
 		onLoad() {
 			this.checkLogin();
-			this.getClass();
-			this.$http.httpTokenRequest2({
-				url:'/course/getCourses',
-				method:'get',
-			}).then((res)=>{
-				for (var i = 0; i < res.length; i++) {
-					this.classNameList.push({label:res[i]})
+			this.$api.getCreateClass().then((data) => {
+				if (data.length > 0) {
+					this.classcreate = data
+				} else {
+					this.classcreate = [{
+						className: "暂无创建",
+						createTime: "",
+						id: "",
+						classID: "",
+						teacherName: "点击右上角，创建班课"
+					}]
+				}
+			})
+			this.$api.getJoinClass().then(data => {
+				if (data.length > 0) {
+					this.classadd = data
+				} else {
+					this.classadd = [{
+						className: "暂无加入",
+						createTime: "",
+						id: "",
+						classID: "",
+						teacherName: "点击右上角，加入班课"
+					}]
 				}
 			})
 		},
@@ -98,26 +115,14 @@
 				keyword: '',
 				classid: '',
 				showKeyboard: false,
-				classcreate: [{
-					className: "暂无创建",
-					createTime: "",
-					id: "",
-					classID: "",
-					teacherName: "点击右上角，创建班课"
-				}],
-				classadd: [{
-					className: "暂无加入",
-					createTime: "",
-					id: "",
-					classID: "",
-					teacherName: "点击右上角，加入班课"
-				}],
+				classcreate: [],
+				classadd: [],
 				form: {
 					className: '',
 					openYear: '',
 					schoolName: '',
 					collegeName: '',
-					classNumber:''
+					classNumber: ''
 				},
 				showPop: false,
 				showPop1: false,
@@ -125,7 +130,7 @@
 				selectShow: false,
 				selectShow1: false,
 				selectShow2: false,
-				classSelect:false,
+				classSelect: false,
 				schoolList: [{
 						label: '福州大学',
 						children: [{
@@ -158,7 +163,7 @@
 					}
 				],
 				yearList: [],
-				classNameList:[],
+				classNameList: [],
 				cource: {
 					teacherName: "",
 					createTime: "",
@@ -175,11 +180,27 @@
 			this.$api.getCreateClass().then((data) => {
 				if (data.length > 0) {
 					this.classcreate = data
+				} else {
+					this.classcreate = [{
+						className: "暂无创建",
+						createTime: "",
+						id: "",
+						classID: "",
+						teacherName: "点击右上角，创建班课"
+					}]
 				}
 			})
 			this.$api.getJoinClass().then(data => {
 				if (data.length > 0) {
 					this.classadd = data
+				} else {
+					this.classadd = [{
+						className: "暂无加入",
+						createTime: "",
+						id: "",
+						classID: "",
+						teacherName: "点击右上角，加入班课"
+					}]
 				}
 			})
 		},
@@ -198,34 +219,53 @@
 				} else if (index == 0) {
 					this.showPop1 = true
 				} else {
-					uni.scanCode({
-						success: function(res) {
-							this.showToast(res.result);
-							if (res.result == 8) {
-								if (!this.makesurediff()) {
-									this.showToastFault('您已加入班课')
+					this.$api.getCode().then(res => {
+						if (res.length == 8) {
+							for (var i = 0; i < this.classadd.length; i++) {
+								if (this.classadd[i].classID === res) {
+									this.showToastFault('您已加入改班课')
+									return 
+								}
+							}
+							let course = uni.getStorageSync(res)
+							if (course) {
+								if (!course.isOpen) {
+									this.showToast('课程暂未开放')
 									return
 								}
-								let course = uni.getStorageSync(this.classid)
-								if (course) {
-									if (!course.isOpen) {
-										this.showToast('课程暂未开放')
-										return
-									}
-									if (course.isEnd) {
-										this.showToast('课程已经结束')
-										return
-									}
+								if (course.isEnd) {
+									this.showToast('课程已经结束')
+									return
 								}
-								this.$api.joinClass(res.result).then((res) => {
-									this.showToast('加入成功')
-								})
-							} else {
-								this.showToastFault('条形码内容错误')
 							}
+							this.$api.joinClass(res).then((res) => {
+								this.showToast('加入班课成功')
+								this.index = 1
+								this.getClass()
+							})
+						} else {
+							uni.showToast({
+								icon: 'none',
+								title: '二维码内容错误',
+								duration: 2000
+							});
 						}
-					});
+					})
 				}
+			},
+			selectClass() {
+				this.classNameList = []
+				this.$http.httpTokenRequest2({
+					url: '/course/getCourses',
+					method: 'get',
+				}).then((res) => {
+					for (var i = 0; i < res.length; i++) {
+						this.classNameList.push({
+							label: res[i]
+						})
+					}
+				})
+				this.classSelect = true
 			},
 			valChange(val) {
 				// 将每次按键的值拼接到value变量中，注意+=写法
@@ -240,16 +280,31 @@
 				this.$api.getCreateClass().then((data) => {
 					if (data.length > 0) {
 						this.classcreate = data
+					} else {
+						this.classcreate = [{
+							className: "暂无创建",
+							createTime: "",
+							id: "",
+							classID: "",
+							teacherName: "点击右上角，创建班课"
+						}]
 					}
 				})
 				this.$api.getJoinClass().then(data => {
 					if (data.length > 0) {
 						this.classadd = data
+					} else {
+						this.classadd = [{
+							className: "暂无加入",
+							createTime: "",
+							id: "",
+							classID: "",
+							teacherName: "点击右上角，加入班课"
+						}]
 					}
 				})
 			},
 			confirmPop() { //确定
-
 				if (this.classid.length == 8) {
 					if (!this.makesurediff()) {
 						this.showToastFault('您已加入班课')
@@ -283,6 +338,8 @@
 			confirmPop2() {
 				this.$api.joinClass(this.classid).then((res) => {
 					this.showToast('加入成功')
+					this.index = 1
+					this.getClass()
 				})
 				this.classid = ''
 			},
@@ -327,8 +384,6 @@
 			selectConfirm(e) {
 				this.form.schoolName = e[0].label
 				this.form.collegeName = e[1].label
-
-				
 			},
 			// 选择商品类型回调
 			selectConfirm1(e) {
@@ -343,7 +398,7 @@
 					this.form.openYear = String(val.label);
 				})
 			},
-			classSelectConfirm(e){
+			classSelectConfirm(e) {
 				e.map((val, index) => {
 					this.form.className = val.label;
 				})

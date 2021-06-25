@@ -25,10 +25,14 @@
 				<view>
 					<u-button @click="showQrcode" type="primary">生成班课二维码</u-button>
 				</view>
-
+				<br>
+				<view>
+					<u-button @click="goSignMsg" type="success">查看历史签到信息</u-button>
+				</view>
+				
 				<u-modal v-model="modal_qr" title="班课二维码">
 					<view class="picture">
-						<view style="padding-right: 50rpx;padding-top: 30rpx;">
+						<view style="padding-top: 30rpx;">
 							<ayQrcode ref="qrcode" :modal="modal_qr" :url="cource.classID" @hideQrcode="hideQrcode"
 								:height="200" :width="200" themeColor="#33CCCC" />
 						</view>
@@ -151,6 +155,12 @@
 			}
 		},
 		methods: {
+			goSignMsg(){
+				console.log(this.signMsg.teaCouID)
+				uni.navigateTo({
+					url:"../signMsg/signMsg?id="+String(this.signMsg.teaCouID)+"&classId="+this.cource.classID
+				})
+			},
 			sign() {
 				this.show = true;
 			},
@@ -224,6 +234,7 @@
 <style lang="scss">
 	.u-page {
 		display: flex;
+		flex-direction: column;
 		justify-content: center;
 		align-items: center;
 		width: 100%;

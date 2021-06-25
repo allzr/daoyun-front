@@ -54,11 +54,15 @@
 <script>
 	export default {
 		onReady() {
-			this.user = uni.getStorageSync('user')
+			this.$http.httpTokenRequest2({
+				url:"/user/getInfo"
+			}).then(res=>{
+				this.user = res
+			})
 		},
 		data() {
 			return {
-				src: '/static/头像.png',
+				src: '/static/p3.png',
 				name: "小发",
 				id: "825655513",
 				realName: "点击设置真实姓名",

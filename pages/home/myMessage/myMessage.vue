@@ -1,5 +1,5 @@
 <template>
-	<view class="wrap">
+	<view class="wrap" style="background-color: #EEEEEE;">
 		<u-form :model="user" :rules="rules" ref="uForm">
 			<u-form-item :leftIconStyle="{color: '#888', fontSize: '32rpx'}" left-icon="account" label-width="150"
 				:label-position="labelPosition" label="用户名" prop="username">
@@ -9,9 +9,6 @@
 				:label-position="labelPosition" label="真实姓名">
 				<u-input :border="border" placeholder="请输入真实姓名" v-model="user.realName" type="text"></u-input>
 			</u-form-item>
-			
-			
-
 			<u-form-item :label-position="labelPosition" label="出生年份" label-width="150">
 				<u-input :border="border" placeholder="请输入出生年份" prop="bornYear" v-model="user.bornYear" type="text"></u-input>
 			</u-form-item>
@@ -166,14 +163,9 @@
 </script>
 
 <style scoped lang="scss">
-	page {
-		background-color: #FFFFFF;
-	}
-
 	.wrap {
 		padding: 30rpx;
 	}
-
 	.agreement {
 		display: flex;
 		align-items: center;
